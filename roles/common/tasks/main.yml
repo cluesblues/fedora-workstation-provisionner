@@ -1,0 +1,40 @@
+---
+- name: Upgrade all system.
+  dnf:
+    name: '*'
+    state: latest
+
+- name: Install basic tools.
+  dnf:
+    name: ['gnome-tweaks', 'transmission', 'thunderbird', 'vim', 'tig']
+    state: latest
+
+- name: Install rpm fusion free.
+  dnf:
+    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm"
+    state: present
+
+- name: Install rpm fusion non free.
+  dnf:
+    name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm"
+    state: present
+
+- name: Create Workspace directory.
+  file:
+    path: /home/{{ username }}/Workspace
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: No sudo password config.
+  template:
+    src: ../files/no_sudo
+    dest: /etc/sudoers.d/{{ username }}
+
+- name: Install media codec.
+  dnf:
+    name: ['gstreamer1-libav', 'gstreamer1-plugins-bad-freeworld', 'gstreamer1-plugins-ugly']
+    state: latest
+
+- include: codium.yml
+- include: gnome.yml

@@ -1,0 +1,9 @@
+---
+- name: Fedora workstation provisionner
+  become: yes
+  hosts: localhost
+  roles:
+    - common
+    - zsh
+  vars:
+    - ansible_python_interpreter: "/usr/bin/python3"

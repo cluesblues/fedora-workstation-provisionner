@@ -1,0 +1,19 @@
+---
+- name: Add codium rpm repo key.
+  rpm_key:
+    state: present
+    key: https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
+
+- name: Add codium rpm repo.
+  yum_repository:
+    name: codium
+    description: codium rpm repo
+    file: external_repos
+    baseurl: https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/repos/rpms/ 
+    gpgcheck: yes
+
+- name: Install codium.
+  dnf:
+    name: codium
+    state: latest
+
