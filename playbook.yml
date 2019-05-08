@@ -1,0 +1,8 @@
+---
+- name: Fedora workstation provisionner
+  become: yes
+  hosts: all
+  roles:
+    - common
+  vars:
+    - ansible_python_interpreter: "/usr/bin/python3"

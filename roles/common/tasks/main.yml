@@ -1,0 +1,20 @@
+---
+- name: upgrade all system.
+  dnf:
+    name: '*'
+    state: latest
+
+- name: Install basic tools.
+  dnf:
+    name: ['keepassx', 'thunderbird', 'inkscape', 'ansible', 'git']
+    state: latest
+
+- name: Install rpm fusion free.
+  dnf:
+    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm"
+    state: present
+
+- name: Install rpm fusion non free
+  dnf:
+    name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm"
+    state: present
