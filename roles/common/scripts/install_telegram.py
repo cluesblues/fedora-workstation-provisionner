@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# @TODO : this instructions need to be translate in ansible.
+
 import os
 import tarfile
 import re
@@ -33,4 +35,6 @@ if file != 0:
     full_path = src_directory + file
     extract_file(full_path, ".")
 
-os.symlink(src_directory + '/Telegram/Telegram', '/usr/local/bin/telegram')
+    if os.path.islink('/usr/local/bin/telegram'):
+        os.unlink('/usr/local/bin/telegram')
+        os.symlink(src_directory + '/Telegram/Telegram', '/usr/local/bin/telegram')

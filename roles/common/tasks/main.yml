@@ -26,4 +26,4 @@
     mode: 0777
 
 - name: Install telegram linux native app.
-  script: ../scripts/install_telegram.sh
+  script: ../scripts/install_telegram.py
