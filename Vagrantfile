@@ -13,10 +13,8 @@ Vagrant.configure("2") do |config|
     vb.memory = "4096"
   end
 
-  config.vm.provision "ansible_local" do |ansible|
+  config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
-    ansible.install_mode = "pip"
-    ansible.version = "2.2.1.0"
   end
 
 end
