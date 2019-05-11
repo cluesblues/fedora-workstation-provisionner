@@ -36,3 +36,5 @@
   user:
     name: "{{ username }}"
     groups: docker
+
+- include: traefik.yml

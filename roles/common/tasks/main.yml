@@ -14,7 +14,7 @@
     name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm"
     state: present
 
-- name: Install rpm fusion non free
+- name: Install rpm fusion non free.
   dnf:
     name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm"
     state: present
@@ -27,3 +27,10 @@
 
 - name: Install telegram linux native app.
   script: ../scripts/install_telegram.py
+
+- name: Create Workspace directory.
+  file:
+    path: /home/{{ username }}/Workspace
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
