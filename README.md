@@ -23,7 +23,16 @@ vagrant up --provider=virtualbox --provision
 
 ## Production
 
-@TODO.
+- ansible
+
+```shell
+git clone https://framagit.org/bzhazreal/fedora-workstation-provisionner.git
+cd fedora-workstation-provisionner
+
+mv example.vars.yml vars.yml
+# Set your own vars
+# In playbook.yml replace "all" by "localhost"
+```
 
 
 # Feature:
