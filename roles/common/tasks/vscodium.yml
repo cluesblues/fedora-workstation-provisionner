@@ -17,3 +17,13 @@
     name: vscodium
     state: latest
 
+- name: Install ansible extension for vscode.
+  command: "vscodium --install-extension {{ item }}"
+  loop:
+    - vscoss.vscode-ansible
+    - peterjausovec.vscode-docker
+    - marcostazi.vs-code-drupal
+    - ms-python.python
+    - thenouillet.symfony-vscode
+    - bbenoist.vagrant
+  become: "{{ username }}"
