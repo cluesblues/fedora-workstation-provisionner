@@ -34,3 +34,5 @@
     state: directory
     owner: "{{ username }}"
     group: "{{ username }}"
+
+- include: vscodium.yml
