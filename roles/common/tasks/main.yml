@@ -6,7 +6,7 @@
 
 - name: Install basic tools.
   dnf:
-    name: ['keepassx', 'inkscape', 'git']
+    name: ['keepassx', 'inkscape', 'git', 'gnome-tweaks']
     state: latest
 
 - name: Install rpm fusion free.
@@ -34,5 +34,10 @@
     state: directory
     owner: "{{ username }}"
     group: "{{ username }}"
+
+- name: Install media codec.
+  dnf:
+    name: ['gstreamer1-libav', 'gstreamer1-plugins-bad-freeworld', 'gstreamer1-plugins-ugly', 'gstreamer1-plugins-bad-nonfree']
+    state: latest
 
 - include: vscodium.yml
