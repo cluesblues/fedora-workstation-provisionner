@@ -35,6 +35,7 @@
 - name: Add user in group docker.
   user:
     name: "{{ username }}"
-    groups: docker
+    groups: wheel, docker
 
 - include: traefik.yml
+
