@@ -26,4 +26,5 @@
     - ms-python.python
     - thenouillet.symfony-vscode
     - bbenoist.vagrant
+    - marcostazi.vs-code-vagrantfile
   become: "{{ username }}"
