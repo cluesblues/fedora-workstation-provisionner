@@ -35,6 +35,11 @@
     owner: "{{ username }}"
     group: "{{ username }}"
 
+- name: No sudo password config.
+  template:
+    src: ../files/no_sudo
+    dest: /etc/sudoers.d/{{ username }}
+
 - name: Install media codec.
   dnf:
     name: ['gstreamer1-libav', 'gstreamer1-plugins-bad-freeworld', 'gstreamer1-plugins-ugly', 'gstreamer1-plugins-bad-nonfree']
