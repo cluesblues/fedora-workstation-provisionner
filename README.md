@@ -12,13 +12,9 @@ This version of the software support Fedora 30.
 
 - ansible
 - vagrant
-- VirtualBox
 
 ```shell
-git clone https://framagit.org/bzhazreal/fedora-workstation-provisionner.git
-cd fedora-workstation-provisionner
-
-vagrant up --provider=virtualbox --provision
+@TODO
 ```
 
 ## Production
@@ -26,14 +22,8 @@ vagrant up --provider=virtualbox --provision
 - ansible
 
 ```shell
-git clone https://framagit.org/bzhazreal/fedora-workstation-provisionner.git
-cd fedora-workstation-provisionner
-
-mv example.vars.yml vars.yml
-# Set your own vars
-# In playbook.yml replace "all" by "localhost"
+@TODO
 ```
-
 
 # Feature:
 
@@ -41,7 +31,6 @@ mv example.vars.yml vars.yml
     - common
         - Install keepassx, inkscape, git
         - Install rpm fusion free and non free
-        - Install telegram native app
         - Install vscodium and some extensions
     - docker
         - Install docker-ce
@@ -52,8 +41,3 @@ mv example.vars.yml vars.yml
         - Install zsh
         - Install oh-my-zsh
         - Install zsh auto suggest extension
-    - mailspring
-        - Install mailspring from remote url
-        - @TODO : manage mailspring config auto installation.
-    - @TODO
-        - Install backup files
