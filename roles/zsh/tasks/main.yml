@@ -23,7 +23,7 @@
 
 - name: Adding .zshrc file
   template:
-    src: ../files/.zshrc
+    src: ../templates/zshrc.j2
     dest: "/home/{{ username }}/.zshrc"
     owner: "{{ username }}"
     group: "{{ username }}"
