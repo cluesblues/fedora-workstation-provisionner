@@ -1,5 +1,0 @@
----
-- name: install the nginx rpm from a remote repo
-  dnf:
-    name: 'https://updates.getmailspring.com/download?platform=linuxRpm'
-    state: present
