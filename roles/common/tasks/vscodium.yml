@@ -1,30 +1,19 @@
 ---
-- name: Add vscodium rpm repo key.
+- name: Add codium rpm repo key.
   rpm_key:
     state: present
     key: https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 
-- name: Add vscodium rpm repo.
+- name: Add codium rpm repo.
   yum_repository:
-    name: vscodium
-    description: vscodium rpm repo
+    name: codium
+    description: codium rpm repo
     file: external_repos
     baseurl: https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/repos/rpms/ 
     gpgcheck: yes
 
-- name: Install vscodium.
+- name: Install codium.
   dnf:
-    name: vscodium
+    name: codium
     state: latest
 
-- name: Install ansible extension for vscode.
-  command: "vscodium --user-data-dir {{ username }} --install-extension {{ item }}"
-  loop:
-    - vscoss.vscode-ansible
-    - peterjausovec.vscode-docker
-    - marcostazi.vs-code-drupal
-    - ms-python.python
-    - thenouillet.symfony-vscode
-    - bbenoist.vagrant
-    - marcostazi.vs-code-vagrantfile
-  become: "{{ username }}"
