@@ -1,7 +1,7 @@
 ---
 - name: Fedora workstation provisionner
   become: yes
-  hosts: all
+  hosts: localhost
   roles:
     - common
     - docker
