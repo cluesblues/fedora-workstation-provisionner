@@ -6,7 +6,7 @@
 
 - name: Install basic tools.
   dnf:
-    name: ['keepassx', 'git', 'gnome-tweaks', 'transmission']
+    name: ['keepassx', 'git', 'gnome-tweaks', 'transmission', 'tmux']
     state: latest
 
 - name: Install rpm fusion free.
