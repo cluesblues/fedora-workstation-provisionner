@@ -7,3 +7,9 @@
     group: "{{ username }}"
     mode: 0664
 
+- name: Enable gnome tab to click
+  dconf:
+    key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
+    value: true
+    state: present
+  ignore_errors: yes
