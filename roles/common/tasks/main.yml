@@ -43,3 +43,4 @@
     state: latest
 
 - include: codium.yml
+- include: gnome.yml
