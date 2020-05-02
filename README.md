@@ -4,40 +4,17 @@
 
 This repo contains my Fedora workstation auto provisionner. This install my stuff to dev and other tools.
 
-This version of the software support Fedora 30.
+This version of the software support Fedora 32.
 
-## Development.
+## How it works
 
 ### Requirements
 
-- ansible
-- vagrant
+- [ansible](https://www.ansible.com/)
+
+### Commands
 
 ```shell
-@TODO
+ansible-playbook playbook.yml --extra-vars="username=<YOUR USERNAME>"
 ```
 
-## Production
-
-- ansible
-
-```shell
-@TODO
-```
-
-# Feature:
-
-- role :
-    - common
-        - Install keepassx, inkscape, git
-        - Install rpm fusion free and non free
-        - Install vscodium and some extensions
-    - docker
-        - Install docker-ce
-        - Install docker-compose
-        - Add basic traefik docker-compose
-        - @TODO : Actually repo file is custom and specify previous fedora release.
-    - zsh
-        - Install zsh
-        - Install oh-my-zsh
-        - Install zsh auto suggest extension

@@ -1,5 +1,0 @@
----
-- name: Move traefik directory in Workspace directory.
-  synchronize:
-    src: ../files/traefik/
-    dest: "/home/{{ username }}/Workspace/traefik/"

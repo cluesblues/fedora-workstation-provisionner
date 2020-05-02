@@ -1,12 +1,12 @@
 ---
-- name: upgrade all system.
+- name: Upgrade all system.
   dnf:
     name: '*'
     state: latest
 
 - name: Install basic tools.
   dnf:
-    name: ['keepassx', 'git', 'gnome-tweaks', 'transmission', 'tmux', 'thunderbird']
+    name: ['gnome-tweaks', 'transmission', 'thunderbird', 'vim', 'tig']
     state: latest
 
 - name: Install rpm fusion free.
@@ -18,12 +18,6 @@
   dnf:
     name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm"
     state: present
-
-- name: Download telegram linux nativ app.
-  get_url:
-    url: https://telegram.org/dl/desktop/linux
-    dest: /usr/local/src
-    mode: 0777
 
 - name: Create Workspace directory.
   file:
