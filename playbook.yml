@@ -4,7 +4,6 @@
   hosts: localhost
   roles:
     - common
-    - docker
     - zsh
   vars:
     - ansible_python_interpreter: "/usr/bin/python3"

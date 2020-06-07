@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 32.1
+- Feature : Remove docker-ce, use podman.
+
 ## Version 32.0
 ### Support Fedora 32
 - Feature : Remove some default package (git is already installed, remove tmux keepassx), add tig.
