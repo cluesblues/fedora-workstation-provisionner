@@ -15,6 +15,9 @@ This version of the software support Fedora 32.
 ### Commands
 
 ```shell
-ansible-playbook playbook.yml --extra-vars="username=<YOUR USERNAME>"
+git clone https://github.com/bzhazreal/fedora-workstation-provisionner.git
+cd fedora-workstation-provisionner
+sudo dnf install ansible
+ansible-playbook playbook.yml --extra-vars="ansible_become_pass=<YOUR PASSWORD> username=<YOUR USERNAME>"
 ```
 

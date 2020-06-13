@@ -1,7 +1,9 @@
 # Changelog
 
 ## Version 32.1
-- Feature : Remove docker-ce, use podman.
+- Feature : Remove docker-ce, use podman man.
+- Feature : Add new default package
+- Doc	  : Update install instructions.
 
 ## Version 32.0
 ### Support Fedora 32
@@ -17,5 +19,4 @@
 
 ## Version 30.0
 ### Support Fedora 30
-
 
