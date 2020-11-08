@@ -1,40 +1,122 @@
 ---
-- name: Upgrade all system.
+###
+#
+# General packages
+#
+###
+- name: Update all packages
   dnf:
     name: '*'
     state: latest
 
-- name: Install basic tools.
+- name: Install basic tools
   dnf:
-    name: ['gnome-tweaks', 'transmission', 'thunderbird', 'vim', 'tig']
-    state: latest
+    name: ['gnome-tweaks', 'transmission', 'thunderbird', 'vim', 'tig', 'htop']
 
-- name: Install rpm fusion free.
+- name: Install rpm fusion free
   dnf:
     name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm"
-    state: present
+    disable_gpg_check: yes
 
-- name: Install rpm fusion non free.
+- name: Install rpm fusion non free
   dnf:
     name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm"
-    state: present
+    disable_gpg_check: yes
 
-- name: Create Workspace directory.
-  file:
-    path: /home/{{ username }}/Workspace
-    state: directory
-    owner: "{{ username }}"
-    group: "{{ username }}"
+- name: Install media codec
+  dnf:
+    name: ['gstreamer1-libav', 'gstreamer1-plugins-bad-freeworld', 'gstreamer1-plugins-ugly']
 
-- name: No sudo password config.
+- name: No sudo password config
   template:
     src: ../files/no_sudo
     dest: /etc/sudoers.d/{{ username }}
+    mode: '0644'
 
-- name: Install media codec.
+###
+#
+# Gnome settings
+#
+###
+- name: Install dconf
   dnf:
-    name: ['gstreamer1-libav', 'gstreamer1-plugins-bad-freeworld', 'gstreamer1-plugins-ugly']
-    state: latest
+    name: ['python3-psutil', 'dconf', 'dbus-tools', 'dbus-daemon']
 
-- include: codium.yml
-- include: gnome.yml
+- name: Enable Two-finger scrolling
+  become: false
+  dconf:
+    key: "/org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled"
+    value: "true"
+
+- name: Enable tap to click
+  become: false
+  dconf:
+    key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
+    value: "true"
+
+- name: Disable hot corner overview
+  become: false
+  dconf:
+    key: "/org/gnome/desktop/interface/enable-hot-corners"
+    value: "false"
+
+- name: Allow up to 100% sound
+  become: false
+  dconf:
+    key: "/org/gnome/desktop/sound/allow-volume-above-100-percent"
+    value: "true"
+
+- name: Disable gnome shell event sound
+  become: false
+  dconf:
+    key: "/org/gnome/desktop/sound/event-sounds"
+    value: "false"
+
+- name: enable extensions
+  become: false
+  dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: "['horizontal-workspaces@gnome-shell-extensions.gcampax.github.com']"
+
+- name: app-switcher on the current workspace only
+  become: false
+  dconf:
+    key: "/org/gnome/shell/app-switcher/current-workspace-only"
+    value: "true"
+
+###
+#
+# Moby engine
+#
+###
+- name: Install moby-engine
+  dnf:
+    name: ['moby-engine', 'containerd']
+
+- name: Create docker group
+  group:
+    name: 'docker'
+    state: present
+
+- name: Add user in docker group
+  user:
+    name: "{{ username }}"
+    groups: docker
+    append: yes
+
+- name: Disable CGroups V2
+  command: grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+
+- name: Add docker0 interface
+  firewalld:
+    interface: docker0
+    zone: trusted
+    permanent: yes
+    state: enabled
+
+- name: Masquerade Fedora Workstation
+  firewalld:
+    zone: FedoraWorkstation
+    permanent: yes
+    masquerade: "true"
+    state: enabled

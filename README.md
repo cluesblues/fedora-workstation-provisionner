@@ -4,7 +4,7 @@
 
 This repo contains my Fedora workstation auto provisionner. This install my stuff to dev and other tools.
 
-This version of the software support Fedora 32.
+This version of the software support Fedora 33.
 
 ## How it works
 
