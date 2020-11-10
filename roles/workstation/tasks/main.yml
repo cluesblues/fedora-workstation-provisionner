@@ -1,0 +1,332 @@
+---
+###
+#
+# Base settings
+#
+###
+- name: Update all packages
+  dnf:
+    name: '*'
+    state: latest
+  tags:
+    - base
+    - package
+
+- name: Install basic tools
+  dnf:
+    name:
+      - gnome-tweaks
+      - transmission
+      - thunderbird
+      - vim
+      - tig
+      - htop
+  tags:
+    - base
+    - package
+
+- name: Add rpm fusion repo
+  dnf:
+    name:
+      - "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm"
+      - "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm"
+    disable_gpg_check: yes
+  tags:
+    - base
+    - repo
+
+- name: Install media codec
+  dnf:
+    name:
+      - 'gstreamer1-libav'
+      - 'gstreamer1-plugins-bad-freeworld'
+      - 'gstreamer1-plugins-ugly'
+  tags:
+    - base
+    - package
+
+- name: No sudo password config
+  template:
+    src: ../files/no_sudo
+    dest: /etc/sudoers.d/{{ username }}
+    mode: '0644'
+  tags:
+    - base
+    - permission
+
+###
+#
+# Gnome settings
+#
+###
+- name: Install dconf
+  dnf:
+    name: ['python3-psutil', 'dconf', 'dbus-tools', 'dbus-daemon']
+  tags:
+    - package
+    - gnome
+
+- name: Manage dconf
+  become: false
+  dconf:
+    key: "{{ item.k }}"
+    value: "{{ item.v }}"
+  loop:
+    - k: "/org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled"
+      v: "true"
+    - k: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
+      v: "true"
+    - k: "/org/gnome/desktop/interface/enable-hot-corners"
+      v: "true"
+    - k: "/org/gnome/desktop/sound/allow-volume-above-100-percent"
+      v: "true"
+    - k: "/org/gnome/desktop/sound/event-sounds"
+      v: "false"
+    - k: "/org/gnome/shell/enabled-extensions"
+      v: "['horizontal-workspaces@gnome-shell-extensions.gcampax.github.com']"
+    - k: "/org/gnome/shell/app-switcher/current-workspace-only"
+      v: "true"
+    - k: "/org/gnome/desktop/interface/gtk-theme"
+      v: "'Adwaita-dark'"
+  tags:
+    - gnome
+
+###
+#
+# Zsh configuration
+#
+###
+- name: Install zsh
+  dnf:
+    name: zsh
+  tags:
+    - zsh
+    - package
+
+- name: Clone oh-my-zsh repo
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh.git
+    dest: "/home/{{ username }}/.oh-my-zsh"
+    version: master
+  tags:
+    - zsh
+
+- name: Clone zsh-autosuggestions repo
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: "/home/{{ username }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    version: master
+  tags:
+    - zsh
+
+- name: Update .oh-my-zsh owner
+  file:
+    path: /home/{{ username }}/.oh-my-zsh
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    recurse: yes
+  tags:
+    - zsh
+
+- name: Adding .zshrc file
+  template:
+    src: templates/zshrc.j2
+    dest: "/home/{{ username }}/.zshrc"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
+  tags:
+    - zsh
+
+- name: Set zsh as default shell
+  user:
+    name: "{{ username }}"
+    shell: /bin/zsh
+  tags:
+  - zsh
+
+###
+#
+# Moby engine
+#
+###
+- name: Install moby-engine
+  dnf:
+    name: ['moby-engine', 'containerd']
+  tags:
+    - container
+    - package
+
+- name: Create docker group
+  group:
+    name: 'docker'
+    state: present
+  tags:
+    - container
+    - permission
+
+- name: Add user in docker group
+  user:
+    name: "{{ username }}"
+    groups: docker
+    append: yes
+  tags:
+    - container
+    - permission
+
+- name: Disable CGroups V2
+  command: grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+  when: true
+  tags:
+    - container
+
+- name: Add docker0 interface
+  firewalld:
+    interface: docker0
+    zone: trusted
+    permanent: yes
+    state: enabled
+  tags:
+    - container
+    - firewall
+
+- name: Masquerade Fedora Workstation
+  firewalld:
+    zone: FedoraWorkstation
+    permanent: yes
+    masquerade: "true"
+    state: enabled
+  tags:
+    - container
+    - firewall
+
+- name: Install docker-compose
+  pip:
+    name: docker-compose
+  tags:
+    - container
+    - package
+
+###
+#
+# Vagrant
+#
+###
+- name: Install virtualization tools
+  dnf:
+    name: ['qemu-kvm', 'libvirt', 'libguestfs-tools', 'virt-install', 'rsync']
+  tags:
+    - virt
+    - package
+
+- name: Install vagrant and vagrant libvirt
+  dnf:
+    name: ['vagrant', 'vagrant-libvirt']
+  tags:
+    - virt
+    - package
+
+- name: Enable vagrant zsh plugin
+  lineinfile:
+    path: "/home/{{ username }}/.zshrc"
+    line: "plugins+=('vagrant')"
+  tags:
+    - virt
+
+- name: Add hashicorp repo
+  yum_repository:
+    name: hashicorp_repo
+    description: The Hashicorp repo
+    baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://rpm.releases.hashicorp.com/gpg
+  tags:
+    - virt
+    - repo
+
+- name: Install packer
+  dnf:
+    name: packer
+    update_cache: yes
+  tags:
+    - virt
+    - package
+
+- name: Packer file exist
+  stat:
+    path: /usr/bin/packer
+  register: packer_bin
+  tags:
+    - virt
+
+- name: Rename packer package
+  command: mv /usr/bin/packer /usr/bin/packer.io
+  when: packer_bin.stat.exists
+  tags:
+    - virt
+
+###
+#
+# Ansible
+#
+###
+- name: Install ansible and ansible tools
+  dnf:
+    name: ['ansible', 'python3-ansible-lint']
+  tags:
+    - ansible
+    - package
+
+###
+#
+# Python
+#
+###
+- name: Install python virtualenv
+  pip:
+    name: virtualenv
+  tags:
+    - python
+    - package
+
+- name: Enable virtualenv zsh extension
+  lineinfile:
+    path: "/home/{{ username }}/.zshrc"
+    line: "plugins+=('virtualenv')"
+  tags:
+    - python
+
+###
+#
+# Codium
+#
+###
+- name: Add codium repo
+  yum_repository:
+    name: gitlab.com_paulcarroty_vscodium_repo
+    description: vscodium repo
+    baseurl: https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
+  tags:
+    - codium
+    - repo
+
+- name: Install codium
+  dnf:
+    name: codium
+    update_cache: yes
+  tags:
+    - codium
+    - package
+
+- name: Update vscodium json file
+  copy:
+    src: ../templates/product.json
+    dest: /usr/share/codium/resources/app/product.json
+    mode: '0644'
+    backup: yes
+  tags:
+    - codium

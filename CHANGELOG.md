@@ -1,9 +1,17 @@
 # Changelog
 
+## Version 33.1
+- Rework  : Merge all roles in workstation role.
+- Rework  : Manage tasks by tags.
+- Feature : Support moby engine.
+- Feature : Support ansible libvirt.
+- Feature : Perform gnome configuration.
+- Feature : Support codium.
+
 ## Version 32.1
 - Feature : Remove docker-ce, use podman man.
 - Feature : Add new default package
-- Doc	  : Update install instructions.
+- Doc	    : Update install instructions.
 
 ## Version 32.0
 ### Support Fedora 32
